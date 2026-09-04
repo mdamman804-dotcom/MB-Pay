@@ -1,34 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MB-Pay</title>
-<style>
-body{margin:0;font-family:sans-serif;background:#0f172a;color:white;display:flex;justify-content:center;align-items:center;min-height:100vh}
-.card{background:#1e293b;padding:25px;border-radius:20px;width:90%;max-width:350px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
-h1{color:#38bdf8;margin:0}
-input{width:100%;padding:12px;margin:10px 0;border-radius:10px;border:none;outline:none;font-size:16px}
-button{width:100%;padding:12px;background:#38bdf8;color:#000;font-weight:bold;border:none;border-radius:10px;font-size:18px;margin-top:10px}
-.success{color:#4ade80;margin-top:15px;display:none}
-</style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MB PAY</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="card">
-<h1>MB-Pay</h1>
-<p>Fast & Secure Payment</p>
-<input type="text" id="name" placeholder="Apna Naam">
-<input type="number" id="amount" placeholder="Amount ₹">
-<button onclick="pay()">Pay Now</button>
-<div class="success" id="msg">✅ Payment Successful!</div>
+<body class="flex justify-center bg-[#07070c]">
+<div class="w-full max-w-[420px] bg-[#12121f] min-h-screen pb-[95px]">
+<div class="m-3 bg-gradient-to-r from-[#7c5cfc] to-[#b8a6ff] rounded-[16px] p-3.5 flex justify-between items-center"><h1 class="font-black text-[22px]">MB<span class="text-[#ff2d95]"> PAY</span></h1><div class="flex gap-2"><button onclick="showTab('history')" class="w-8 h-8 bg-black/20 rounded-full">🔔</button><button onclick="showTab('portfolio')" class="w-8 h-8 bg-black/20 rounded-full">👤</button></div></div>
+<div class="mx-3 bg-[#1e1e34] border border-[#7c5cfc]/20 rounded-xl p-2.5 flex justify-between text-[11px] text-white"><span>👥 Users: <b id="totalUsers">1,284</b></span><span>💰 Profit: <b id="myProfit" class="text-green-400">₹0</b></span><span class="text-green-400">● LIVE</span></div>
+<div class="m-3 bg-gradient-to-br from-[#7c5cfc] to-[#1b1b33] rounded-[24px] p-5 text-white"><div class="flex gap-2"><div class="w-9 h-9 bg-[#ffcf4d] text-black font-black rounded-full grid place-items-center">MB</div><span class="font-bold">MB Coin</span></div><p class="text-white/60 text-[12px] mt-4">Balance</p><h2 class="text-[40px] font-black"><span id="balance">13.600</span> GB</h2><p class="text-[#6effa8] text-[12px] font-bold">≈ ₹<span id="inr">1224.50</span> • +2.4% today</p><div class="flex justify-between mt-6 text-[13px]"><div>↗ Buying<br><b>8.240 GB</b></div><div>↘ Selling<br><b>7.640 GB</b></div></div></div>
+<div class="m-3 bg-white rounded-[20px] p-3.5"><div class="flex justify-between font-black text-black text-[14px]"><span>▦ UPI QR</span><button onclick="shareApp()" class="text-[11px] border px-3 py-1 rounded-full">⤴ Share</button></div><div class="mt-2 border rounded-2xl p-4 text-center"><img id="qrImg" class="mx-auto w-[120px]" src=""><p class="font-bold text-[12px] mt-2">Scan to pay via UPI</p><p id="upiShow" class="text-[11px] text-gray-500">mdamman804@okicici</p><button onclick="payUPI()" class="mt-3 w-full bg-black text-white py-3 rounded-full text-[13px] font-bold">Pay ₹100 to Buy MB</button></div></div>
+<div class="m-3 bg-gradient-to-r from-[#fff9d6] to-[#ffe78a] border border-dashed border-orange-400 rounded-xl p-3 text-center"><p class="text-[9px] font-black text-orange-700">AD</p><p class="text-[13px] font-bold">Daily ₹500 Earn App</p><button class="mt-2 bg-[#ff9800] text-white px-5 py-1.5 rounded-full text-[11px] font-black">INSTALL NOW</button></div>
+<div class="mx-3 font-black text-white">Market Activity</div><div class="grid grid-cols-2 gap-2 m-3"><div class="bg-[#1c1c2e] border border-[#2a2a44] rounded-2xl p-3"><p class="text-gray-400 text-[11px]">Buying</p><h3 class="text-white font-black">₹2,145</h3></div><div class="bg-[#1c1c2e] border border-[#2a2a44] rounded-2xl p-3"><p class="text-gray-400 text-[11px]">Selling</p><h3 class="text-white font-black">₹1,980</h3></div></div>
+<div class="grid grid-cols-2 gap-2 m-3"><button onclick="openBuy()" class="bg-[#7c5cfc] text-white py-4 rounded-full font-black">Send MB</button><button onclick="openSell()" class="border-2 border-[#7c5cfc] text-white py-4 rounded-full font-black">Sell MB</button></div>
+<div id="historyPage" class="hidden p-3"><h2 class="text-white font-black">History</h2><div id="historyList" class="mt-3 space-y-2"></div></div>
+<div id="portfolioPage" class="hidden p-3"><h2 class="text-white font-black">Owner Panel</h2><div class="bg-[#1c1c2e] rounded-2xl p-4 mt-4"><label class="text-gray-400 text-[11px]">YOUR UPI ID</label><input id="upiInput" class="w-full mt-1 p-3 rounded-xl bg-black text-white border border-[#333]" value="mdamman804@okicici"><button onclick="saveProfile()" class="w-full mt-4 bg-[#7c5cfc] py-3 rounded-full text-white font-black">SAVE</button></div><button onclick="shareApp()" class="mt-3 w-full border py-2.5 rounded-full text-white">Share App Link</button></div>
 </div>
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[420px] bg-[#16162a] flex justify-around py-3 border-t border-[#222]"><button onclick="showTab('home')" class="text-[#7c5cfc] text-[10px]">🏠 Home</button><button onclick="showTab('history')" class="text-gray-500 text-[10px]">🔔 History</button><button onclick="showTab('portfolio')" class="text-gray-500 text-[10px]">👤 Portfolio</button></div>
+<div id="popup" class="hidden fixed inset-0 bg-black/80 grid place-items-center p-6 z-50"><div class="bg-white rounded-[24px] p-6 w-full max-w-[360px] text-center"><h3 id="popTitle" class="font-black">Buy MB</h3><input id="amount" type="number" placeholder="Kitna GB?" class="w-full mt-4 p-3 border-2 rounded-xl text-center font-bold text-[18px]"><button onclick="confirmTx()" class="w-full mt-4 bg-[#7c5cfc] text-white py-3 rounded-full font-black">Confirm & Pay via UPI</button><button onclick="closePop()" class="mt-2 text-gray-500">Cancel</button></div></div>
 <script>
-function pay(){
- let n=document.getElementById('name').value;
- let a=document.getElementById('amount').value;
- if(n==""||a==""){alert("Naam aur Amount bharo");return;}
- document.getElementById('msg').style.display='block';
-}
+let bal=parseFloat(localStorage.getItem('mb_bal')||'13.6'),profit=parseFloat(localStorage.getItem('mb_profit')||'0'),history=JSON.parse(localStorage.getItem('mb_hist')||'[]'),myUPI=localStorage.getItem('mb_upi')||'mdamman804@okicici',txType='buy';
+function updateUI(){document.getElementById('balance').innerText=bal.toFixed(3);document.getElementById('inr').innerText=(bal*90).toFixed(2);document.getElementById('myProfit').innerText='₹'+profit.toFixed(2);document.getElementById('upiShow').innerText=myUPI;document.getElementById('qrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa='+encodeURIComponent(myUPI)+'&am=100';document.getElementById('totalUsers').innerText=(1284+history.length);let h='';history.slice().reverse().forEach(x=>{h+=`<div class='bg-[#1c1c2e] p-3 rounded-xl text-white text-[12px] flex justify-between'><span>${x.type} ${x.gb}GB - ${x.user}</span><span>₹${x.rs}</span></div>`});document.getElementById('historyList').innerHTML=h||'<p class=text-gray-500>No data</p>';}
+function showTab(t){document.getElementById('historyPage').classList.add('hidden');document.getElementById('portfolioPage').classList.add('hidden');if(t=='history')document.getElementById('historyPage').classList.remove('hidden');if(t=='portfolio')document.getElementById('portfolioPage').classList.remove('hidden');}
+function openBuy(){txType='buy';document.getElementById('popup').classList.remove('hidden');}function openSell(){txType='sell';document.getElementById('popup').classList.remove('hidden');}function closePop(){document.getElementById('popup').classList.add('hidden');}
+function confirmTx(){let gb=parseFloat(document.getElementById('amount').value||0);if(gb<=0)return alert('GB dalo');let rs=gb*90,fee=rs*0.10;if(txType=='buy'){bal+=gb;profit+=fee;history.push({type:'BUY',gb:gb,rs:rs,user:'User_'+Math.floor(Math.random()*9000),time:Date.now()});}else{if(bal<gb)return alert('Balance kam');bal-=gb;profit+=fee;history.push({type:'SELL',gb:gb,rs:rs,user:'You',time:Date.now()});}localStorage.setItem('mb_bal',bal);localStorage.setItem('mb_profit',profit);localStorage.setItem('mb_hist',JSON.stringify(history));updateUI();closePop();window.location.href='upi://pay?pa='+myUPI+'&am='+rs+'&cu=INR';}
+function payUPI(){window.location.href='upi://pay?pa='+myUPI+'&am=100&cu=INR';}
+function saveProfile(){myUPI=document.getElementById('upiInput').value;localStorage.setItem('mb_upi',myUPI);updateUI();alert('Saved: '+myUPI);showTab('home');}
+function shareApp(){let link='https://mdamman804-dotcom.github.io/MB-Pay/';if(navigator.share){navigator.share({title:'MB PAY',url:link});}else{alert('Link copy: '+link);}}
+updateUI();
 </script>
 </body>
 </html>
