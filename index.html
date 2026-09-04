@@ -1,43 +1,30 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MB PAY</title>
-<script src="https://cdn.tailwindcss.com"></script></head>
-<body style="background:#07070c;margin:0">
-<div style="max-width:420px;margin:0 auto;background:#12121f;min-height:100vh;padding-bottom:90px">
+<html><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MB PAY</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body style="background:#000;display:flex;justify-content:center">
+<div class="w-full max-w-[420px] bg-[#0e0e1e] min-h-screen pb-[150px]">
 
-<div class="m-3 bg-gradient-to-r from-[#7c5cfc] to-[#a78bfa] rounded-[16px] p-3.5 flex justify-between">
-<h1 id="logoBtn" class="font-black text-[22px]">MB<span class="text-pink-600"> PAY</span></h1><span class="text-[10px] bg-black/20 px-2 py-1 rounded-full">OWNER</span>
+<div id="logoBtn" class="mx-3 mt-3 bg-gradient-to-r from-[#7c5cfc] to-[#a88bff] rounded-[16px] p-[14px] flex justify-between items-center">
+<h1 class="font-black text-[22px]">MB<span class="text-[#ff2d95]"> PAY</span></h1>
+<span class="text-[10px] bg-black/30 px-2 py-1 rounded-full">DEMO ADS</span>
 </div>
 
-<div id="secretPanel" class="hidden m-3 bg-black border-2 border-yellow-500 rounded-xl p-3">
-<p class="text-yellow-400 font-bold text-[12px]">🔐 OWNER PANEL</p>
-<p class="text-white text-[12px] mt-2">Profit: <b id="secProfit" class="text-green-400">₹0</b></p>
-<button onclick="document.getElementById('secretPanel').classList.add('hidden')" class="w-full mt-2 bg-gray-800 text-white py-2 rounded-full text-[11px]">Close</button>
+<div class="m-3 bg-[#1a1a2e] border border-[#222] rounded-xl p-2 text-center">
+<p class="text-[10px] text-gray-500">ADVERTISEMENT</p>
+<div class="h-[60px] bg-[#222] rounded flex items-center justify-center text-gray-400 text-[12px]">Banner Ad - Yahan AdMob chalega</div>
 </div>
 
-<div class="m-3 bg-gradient-to-br from-[#7c5cfc] to-[#1b1b33] rounded-[24px] p-5 text-white">
-<p class="text-white/60 text-[11px]">Balance</p><h2 class="text-[40px] font-black"><span id="bal">13.600</span> GB</h2>
-<p class="text-green-300 text-[11px]">≈ ₹<span id="inr">1224</span> • +2.4%</p>
+<div class="m-3 bg-gradient-to-br from-[#7c5cfc] to-[#1b1b33] rounded-[20px] p-5 text-white">
+<p class="text-white/60 text-[12px]">Demo Balance</p>
+<h2 class="text-[38px] font-black"><span id="bal">13.600</span> GB</h2>
+<p class="text-[#6effa8] text-[11px]">≈ ₹<span id="inr">1224</span> • Demo only</p>
+<div class="flex justify-between mt-5">
+<div><p class="text-[11px] text-white/60">Buying</p><p class="font-bold">8.240 GB</p></div>
+<div><p class="text-[11px] text-white/60">Selling</p><p class="font-bold">7.640 GB</p></div>
+</div>
 </div>
 
-<div class="m-3 bg-white rounded-[20px] p-4 text-center">
-<b class="block text-left">▦ UPI QR</b>
-<img id="qr" class="mx-auto w-[130px] mt-3" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=mdamman804@okicici">
-<p class="text-[11px] text-gray-500 mt-1">mdamman804@okicici</p>
-<button onclick="location.href='upi://pay?pa=mdamman804@okicici&am=100'" class="w-full mt-3 bg-black text-white py-3 rounded-full font-bold">Pay ₹100</button>
-</div>
-
-<div class="grid grid-cols-2 gap-2 m-3">
-<button onclick="buy()" class="bg-[#7c5cfc] text-white py-4 rounded-full font-black">Buy</button>
-<button onclick="sell()" class="border-2 border-[#7c5cfc] text-white py-4 rounded-full font-black">Sell</button>
-</div>
-
-</div>
-<script>
-let b=13.6,p=0,t=0;
-function up(){document.getElementById('bal').innerText=b.toFixed(3);document.getElementById('inr').innerText=(b*90).toFixed(0);document.getElementById('secProfit').innerText='₹'+p;}
-document.getElementById('logoBtn').addEventListener('click',()=>{t++;if(t>=5){let pw=prompt('Password?');if(pw=='MB@804'){document.getElementById('secretPanel').classList.remove('hidden');}t=0;}setTimeout(()=>t=0,2000);});
-function buy(){let g=parseFloat(prompt('Kitna GB?')||0);if(g>0){b+=g;p+=g*9;up();location.href='upi://pay?pa=mdamman804@okicici&am='+(g*90);}}
-function sell(){let g=parseFloat(prompt('Kitna GB bechna?')||0);if(g>0&&b>=g){b-=g;p+=g*9;up();alert('Sold!');}}
-up();
-</script>
-</body></html>
+<div class="
