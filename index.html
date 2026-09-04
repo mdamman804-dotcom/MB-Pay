@@ -1,76 +1,143 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MB PAY - Trusted</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
-<style>body{font-family:'Manrope',sans-serif}</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MB PAY</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:#000;color:#fff;display:flex;justify-content:center}
+.app{width:100%;max-width:420px;background:#090610;min-height:100vh;position:relative;padding-bottom:85px;border:1px solid #1a1430}
+.header{display:flex;justify-content:center;align-items:center;padding:16px 20px;position:relative}
+.logo{color:#a855f7;font-weight:800;font-size:26px;display:flex;align-items:center;gap:6px}
+.top-icons{position:absolute;right:18px;display:flex;gap:12px;font-size:20px}
+.balance-card{margin:8px 14px;background:linear-gradient(135deg,#5b21b6 0%,#3b1a7a 100%);border-radius:20px;padding:20px;box-shadow:0 0 25px rgba(139,92,246,0.35);border:1px solid rgba(139,92,246,0.3)}
+.balance-card small{color:#c4b5fd;font-size:14px}
+.balance{font-size:42px;font-weight:800;margin:4px 0}
+.balance span{font-size:24px;font-weight:600}
+.rate{font-size:14px;color:#ddd6fe;margin-bottom:14px}
+.watch-btn{width:100%;background:#8b5cf6;color:#fff;border:none;padding:13px;border-radius:12px;font-weight:700;font-size:16px;display:flex;justify-content:center;align-items:center;gap:8px;cursor:pointer}
+.section{padding:16px 14px 0}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.section-head h3{font-size:18px;font-weight:700}
+.live-badge{background:#22c55e;color:#000;font-size:11px;font-weight:800;padding:3px 9px;border-radius:6px}
+.earning-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.earn-box{background:#16102d;border:1px solid #2e2354;border-radius:16px;padding:16px;text-align:center}
+.earn-box .icon{font-size:26px;margin-bottom:6px}
+.earn-box p{color:#9ca3af;font-size:12px;margin-bottom:4px}
+.earn-box h2{font-size:20px;font-weight:800}
+.more-item{background:#16102d;border:1px solid #2e2354;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;cursor:pointer;font-size:14px;font-weight:600}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:#0f0b20;border-top:1px solid #2a1f4d;display:flex;justify-content:space-around;padding:8px 0 12px;z-index:99}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:#6b7280;font-size:11px;cursor:pointer;flex:1}
+.nav-item.active{color:#a855f7}
+.nav-item .ico{font-size:20px}
+.wallet-input{width:100%;padding:13px;background:#1c1635;border:1px solid #3a2f5e;border-radius:10px;color:#fff;margin:8px 0;font-size:14px}
+.sell-btn{width:100%;background:#22c55e;color:#000;font-weight:800;padding:13px;border-radius:10px;border:none;margin-top:8px;cursor:pointer}
+.ad-history{background:#16102d;border-radius:10px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;font-size:13px;border:1px solid #2a1f4d}
+.profile-card{background:#16102d;border:1px solid #2a1f4d;border-radius:18px;padding:20px;margin:14px;text-align:center}
+</style>
 </head>
-<body class="bg-black flex justify-center">
-<div class="w-full max-w-[410px] bg-[#090610] min-h-screen flex flex-col">
+<body>
+<div class="app">
+  <div class="header"><div class="logo">💼 MB PAY</div><div class="top-icons"><span>🔔</span><span>👤</span></div></div>
 
-<!-- HEADER -->
-<div class="flex justify-between items-center p-5">
-<h1 class="text-[#8b5cff] font-extrabold text-[22px] flex items-center gap-2"><span class="text-[26px]">💳</span> MB PAY</h1>
-<div class="flex gap-3 text-[#8b5cff] text-xl">🔔 👤</div>
+  <!-- HOME -->
+  <div id="homeTab" class="tab-content active">
+    <div class="balance-card">
+      <small>Current Balance</small>
+      <div class="balance"><span id="bal">0.000</span> <span>GB</span></div>
+      <div class="rate">Rate: 1GB = ₹10</div>
+      <button class="watch-btn" onclick="watchAd()">▶ Watch Ad +0.100 GB</button>
+    </div>
+    <div class="section">
+      <div class="section-head"><h3>Live Earning <span style="color:#22c55e">•</span></h3><span class="live-badge">LIVE</span></div>
+      <div class="earning-grid">
+        <div class="earn-box"><div class="icon">📈</div><p>Total Ad Earning</p><h2>₹<span id="totalEarn">2340</span></h2></div>
+        <div class="earn-box"><div class="icon" style="background:#a855f7;width:32px;height:32px;border-radius:50%;display:inline-flex;justify-content:center;align-items:center">✓</div><p style="margin-top:6px">Total Paid</p><h2>₹1100</h2></div>
+      </div>
+    </div>
+    <div class="section">
+      <h3 style="margin-bottom:10px">More</h3>
+      <div class="more-item" onclick="alert('MB PAY - Ad Dekho Paise Kamao. 1GB = ₹10 Trusted App.')"><span>ⓘ About Us</span><span>›</span></div>
+      <div class="more-item" onclick="switchTab('earnings')"><span>📄 Payment Proofs</span><span>›</span></div>
+    </div>
+  </div>
+
+  <!-- EARNINGS -->
+  <div id="earningsTab" class="tab-content">
+    <div class="section"><div class="section-head"><h3>Earnings History</h3></div><div id="historyList"><div class="ad-history"><span>Welcome - 0.000 GB</span><span style="color:#22c55e">Start</span></div></div>
+    <div style="margin-top:16px;background:#1c1635;padding:14px;border-radius:12px"><p style="color:#9ca3af;font-size:12px">Total Earned</p><h2 id="historyTotal">0.000 GB = ₹0</h2></div></div>
+  </div>
+
+  <!-- WALLET -->
+  <div id="walletTab" class="tab-content">
+    <div class="section"><h3>Wallet - Sell Data</h3>
+      <div class="balance-card" style="margin:12px 0"><small>Available to Sell</small><div class="balance"><span id="bal2">0.000</span> GB</div><div class="rate">= ₹<span id="rupees">0</span></div></div>
+      <input id="upiInput" class="wallet-input" placeholder="Enter UPI ID (ex: 98765@ybl)">
+      <input id="gbInput" type="number" step="0.1" class="wallet-input" placeholder="GB to sell (Min 1 GB)">
+      <button class="sell-btn" onclick="sellNow()">Sell & Withdraw to UPI</button>
+      <div id="withdrawList" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="profileTab" class="tab-content">
+    <div class="profile-card"><div style="font-size:44px">👤</div><h3 style="margin-top:8px">MB PAY User</h3><p style="color:#9ca3af;font-size:12px">Trusted Member - ID: MB-84</p>
+    <div style="margin-top:14px;text-align:left"><p style="color:#9ca3af;font-size:12px">Total Balance</p><h2 id="bal3">0.000 GB</h2><p style="font-size:13px;color:#a855f7;margin-top:4px">= ₹<span id="rupees2">0</span></p></div>
+    <button class="wallet-input" style="text-align:center;margin-top:14px" onclick="navigator.clipboard.writeText('https://mdamman804-dotcom.github.io/MB-Pay/');alert('Link Copied!')">🔗 Share App Link</button>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('home')" id="nav-home"><div class="ico">🏠</div>Home</div>
+    <div class="nav-item" onclick="switchTab('earnings')" id="nav-earnings"><div class="ico">📊</div>Earnings</div>
+    <div class="nav-item" onclick="switchTab('wallet')" id="nav-wallet"><div class="ico">💼</div>Wallet</div>
+    <div class="nav-item" onclick="switchTab('profile')" id="nav-profile"><div class="ico">👤</div>Profile</div>
+  </div>
 </div>
 
-<!-- MAIN APP (Default Visible) -->
-<div id="appView">
-<!-- BALANCE CARD -->
-<div class="mx-4 bg-gradient-to-br from-[#7d5cff]/40 via-[#5a32d6] to-[#2a1a6b] rounded-[24px] p-6 border border-[#8b5cff]/20 shadow-[0_0_30px_rgba(139,92,255,0.2)]">
-<p class="text-[#b8a0ff] text-[13px]">Current Balance</p>
-<h1 class="text-white text-[44px] font-extrabold leading-none mt-1"><span id="bal">0.000</span> GB</h1>
-<p class="text-[#c5b0ff] text-[13px] mt-2">Rate: 1GB = ₹10</p>
-<button onclick="watchAd()" id="adBtn" class="mt-5 w-full bg-[#8b5cff] hover:bg-[#7a4df0] text-white py-3.5 rounded-full font-bold text-[16px] flex justify-center items-center gap-2">▶ Watch Ad +0.100 GB</button>
-</div>
-
-<!-- LIVE EARNING -->
-<div class="mx-4 mt-7">
-<div class="flex justify-between items-center">
-<p class="text-white font-bold text-[18px] flex items-center gap-2">Live Earning <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span></p>
-<span class="text-[10px] bg-[#2cff7a] text-black px-2.5 py-1 rounded-md font-black">LIVE</span>
-</div>
-<div class="grid grid-cols-2 gap-3 mt-3">
-<div class="bg-[#151229] border border-[#252142] rounded-2xl p-5 text-center">
-<div class="text-[#8b5cff] text-2xl">📈</div>
-<p class="text-[#8a7bb8] text-[12px] mt-2">Total Ad Earning</p>
-<p class="text-white font-extrabold text-[22px] mt-1">₹<span id="earn">0</span></p>
-</div>
-<div class="bg-[#151229] border border-[#252142] rounded-2xl p-5 text-center">
-<div class="w-8 h-8 bg-[#8b5cff] rounded-full flex items-center justify-center mx-auto text-white">✔</div>
-<p class="text-[#8a7bb8] text-[12px] mt-2">Total Paid</p>
-<p class="text-white font-extrabold text-[22px] mt-1">₹<span id="paid">0</span></p>
-</div>
-</div>
-</div>
-
-<!-- MORE -->
-<div class="mx-4 mt-7">
-<p class="text-white font-bold text-[18px]">More</p>
-<div class="mt-3 space-y-3">
-<button onclick="openPage('about')" class="w-full bg-[#151229] border border-[#252142] rounded-2xl p-4 flex justify-between items-center"><span class="flex items-center gap-3 text-white"><span class="w-8 h-8 bg-[#1f1b36] rounded-full flex items-center justify-center text-[#8b5cff]">ⓘ</span> About Us</span><span class="text-gray-500">›</span></button>
-<button onclick="openPage('proof')" class="w-full bg-[#151229] border border-[#252142] rounded-2xl p-4 flex justify-between items-center"><span class="flex items-center gap-3 text-white"><span class="w-8 h-8 bg-[#1f1b36] rounded-full flex items-center justify-center text-[#8b5cff]">📄</span> Payment Proofs</span><span class="text-gray-500">›</span></button>
-</div>
-</div>
-
-<div class="mx-4 mt-5 grid grid-cols-2 gap-3">
-<button onclick="sellRequest()" class="bg-[#1c1932] border border-[#8b5cff] text-white py-3 rounded-full font-bold">💸 Sell GB</button>
-<button onclick="shareApp()" class="bg-[#8b5cff] text-white py-3 rounded-full font-bold">🔗 Share</button>
-</div>
-<div id="userLog" class="mx-4 mt-3 text-[11px] text-gray-500"></div>
-</div>
-
-<!-- ABOUT PAGE -->
-<div id="aboutPage" class="hidden p-5 text-white"><h2 class="font-bold text-xl">About MB PAY</h2><p class="mt-3 text-sm text-gray-400 leading-6">Hum Google Ads se kamate hai. Aap Ad dekhte ho to hume ₹1.5 milta hai. Usme se ₹1 hum aapko dete hai (0.100 GB = ₹1). Rate 1GB = ₹10. Withdrawal har Sunday ko Admin Approval ke baad UPI pe. Ye 100% Trusted model hai.</p><button onclick="openPage('home')" class="mt-6 bg-white text-black px-5 py-2 rounded-full">Back</button></div>
-
-<!-- PROOF PAGE -->
-<div id="proofPage" class="hidden p-5 text-white"><h2 class="font-bold text-xl">Payment Proofs</h2><div id="proofList" class="mt-4 space-y-2 text-sm text-gray-400">Abhi tak koi payment nahi.</div><button onclick="openPage('home')" class="mt-6 bg-white text-black px-5 py-2 rounded-full">Back</button></div>
-
-<!-- ADMIN PANEL -->
-<div id="adminPage" class="hidden p-5 text-white min-h-screen bg-black"><h2 class="font-black text-xl text-[#8b5cff]">ADMIN PANEL</h2><div id="adminList" class="mt-4 space-y-3"></div><button onclick="openPage('home')" class="mt-6 bg-white text-black px-5 py-2 rounded-full">Exit Admin</button></div>
-
-<!-- BOTTOM NAV -->
-<div class="mt-auto grid grid-cols-4 bg-[#131129] border-t border-[#1f1b36] text-[11px] text-center py-3 text-gray-500">
-<button class="text-[#8b5cff] font-bold">
+<script>
+let balance=parseFloat(localStorage.getItem('mb_bal')||0);
+function updateUI(){
+  document.getElementById('bal').innerText=balance.toFixed(3);
+  document.getElementById('bal2').innerText=balance.toFixed(3);
+  document.getElementById('bal3').innerText=balance.toFixed(3)+' GB';
+  let rs=(balance*10).toFixed(0);
+  document.getElementById('rupees').innerText=rs;
+  document.getElementById('rupees2').innerText=rs;
+  document.getElementById('historyTotal').innerText=balance.toFixed(3)+' GB = ₹'+rs;
+}
+updateUI();
+function switchTab(t){
+  document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active'));
+  document.getElementById(t+'Tab').classList.add('active');
+  document.getElementById('nav-'+t).classList.add('active');
+}
+function watchAd(){
+  let btn=document.querySelector('.watch-btn');btn.innerText='⏳ Watching...';btn.disabled=true;
+  setTimeout(()=>{
+    balance+=0.100;localStorage.setItem('mb_bal',balance);
+    document.getElementById('totalEarn').innerText=parseInt(document.getElementById('totalEarn').innerText)+2;
+    updateUI();
+    let h=document.getElementById('historyList');
+    h.innerHTML='<div class="ad-history"><span>'+new Date().toLocaleTimeString()+' - Ad Watched</span><span style="color:#22c55e">+0.100 GB</span></div>'+h.innerHTML;
+    btn.innerText='▶ Watch Ad +0.100 GB';btn.disabled=false;
+  },1500);
+}
+function sellNow(){
+  let upi=document.getElementById('upiInput').value;
+  let gb=parseFloat(document.getElementById('gbInput').value);
+  if(!upi||!gb){alert('UPI aur GB dalo');return}
+  if(gb>balance){alert('Balance kam hai');return}
+  if(gb<1){alert('Min 1 GB');return}
+  balance-=gb;localStorage.setItem('mb_bal',balance);updateUI();
+  document.getElementById('withdrawList').innerHTML='<div class="ad-history"><span>₹'+(gb*10)+' → '+upi+'</span><span style="color:orange">PENDING</span></div>'+document.getElementById('withdrawList').innerHTML;
+  alert('✅ Request sent! ₹'+(gb*10)+' Sunday ko ayega');
+}
+</script>
+</body>
+</html>
