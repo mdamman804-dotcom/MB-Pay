@@ -7,69 +7,70 @@
 <body class="bg-black flex justify-center">
 <div class="w-full max-w-[410px] bg-[#0a0a16] min-h-screen pb-[90px]">
 
-<!-- MB PAY HEADER - 5 tap owner -->
+<!-- Header -->
 <div id="logoBtn" class="mx-3 mt-3 bg-gradient-to-r from-[#8b7cff] to-[#6c4bff] rounded-[14px] p-3.5 flex justify-between items-center">
 <h1 class="font-black text-[22px]">MB<span class="text-[#ff4d9a]"> PAY</span></h1>
-<span class="text-[10px] bg-black/30 px-2 py-1 rounded-full">LIVE</span>
+<span class="text-[8px] bg-black/30 px-2 py-1 rounded-full">REWARD POINTS</span>
 </div>
 
 <!-- Balance Card -->
 <div class="m-3 rounded-[18px] p-4 bg-gradient-to-br from-[#8b7cff] to-[#1a1740] text-white">
-<div class="flex items-center gap-2"><div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center font-black text-black text-[12px]">MB</div><b>MB Coin</b></div>
-<p class="text-white/60 text-[11px] mt-2">Balance</p>
-<h1 class="text-[36px] font-black"><span id="bal">13.600</span> GB</h1>
-<p class="text-[#7dffb2] text-[12px]">≈ ₹<span id="inr">1224</span> • +2.4% today ↗</p>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center font-black text-black text-[11px]">MB</div>
+<div><b class="text-[14px]">MB Coins</b><p class="text-[9px] text-white/60">Reward Points - Not Real Data</p></div>
+<span class="ml-auto text-[10px] bg-white/20 px-2 py-1 rounded-full">DEMO</span>
+</div>
+<p class="text-white/60 text-[11px] mt-2">Your Points Balance</p>
+<h1 class="text-[36px] font-black"><span id="bal">13.600</span></h1>
+<p class="text-[#7dffb2] text-[11px]">≈ <span id="inr">1360</span> Points • +2.4% today</p>
 <div class="flex justify-between mt-4">
-<div><p class="text-white/60 text-[11px]">↗ Buying</p><p class="font-bold text-[13px]">8.240 GB</p></div>
-<div><p class="text-white/60 text-[11px]">↓ Selling</p><p class="font-bold text-[13px]">7.640 GB</p></div>
+<div><p class="text-white/60 text-[11px]">↗ Earning</p><p class="font-bold text-[13px]">8.240</p></div>
+<div><p class="text-white/60 text-[11px]">↓ Redeemed</p><p class="font-bold text-[13px]">7.640</p></div>
 </div>
 </div>
 
-<!-- UPI QR -->
+<!-- UPI QR - SAFE -->
 <div class="m-3 bg-white rounded-[16px] p-3">
-<div class="flex justify-between"><b>◫ UPI QR</b><span class="text-[11px] border px-2 py-1 rounded-full">⤴ Share</span></div>
+<div class="flex justify-between"><b class="text-[14px]">◫ Reward QR</b><span class="text-[10px] border px-2 py-1 rounded-full">⤴ Share</span></div>
 <div class="flex flex-col items-center mt-2">
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=upi://pay?pa=mbpay@mb" class="w-[110px]">
-<p class="text-[11px] mt-1">Scan to pay via UPI</p>
-<p class="text-[10px] text-gray-500">mbpay@mb</p>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=MBPAY-DEMO-POINTS" class="w-[100px]">
+<p class="text-[11px] mt-1 font-bold">Scan to collect Points</p>
+<p class="text-[9px] text-gray-500">Demo QR - No real payment</p>
 </div>
 </div>
 
-<!-- Rewards - Watch Ad & Earn -->
+<!-- Watch Ad -->
 <div class="m-3 bg-white rounded-[16px] p-4 text-center">
-<b class="block text-left">▦ Rewards</b>
-<p class="text-[12px] text-gray-600 mt-1">Ad dekho, 1 GB free pao</p>
-<button onclick="watchAd()" class="w-full mt-3 bg-black text-white py-3 rounded-full font-bold">🎬 Watch Ad & Earn 1 GB</button>
-<div class="mt-2 bg-gray-100 rounded p-2 text-[10px] text-gray-500">AD - Banner yahan chalega</div>
+<b class="block text-left text-[13px]">▦ Earn More</b>
+<p class="text-[11px] text-gray-600 mt-1">Ad dekho, 1 MB Coin free pao</p>
+<button onclick="watchAd()" class="w-full mt-3 bg-black text-white py-3 rounded-full font-bold text-[13px]">🎬 Watch Ad & Earn 1 Coin</button>
 </div>
 
-<!-- Market Activity -->
-<div class="mx-3"><p class="text-white font-bold">Market Activity</p>
+<!-- Market -->
+<div class="mx-3"><p class="text-white font-bold text-[14px]">Market Activity (Demo)</p>
 <div class="grid grid-cols-2 gap-2 mt-2">
-<div class="bg-[#13132a] border border-[#222] rounded-xl p-3"><p class="text-gray-400 text-[11px]">Buying</p><p class="text-white font-black">₹2,145</p><p class="text-green-400 text-[10px]">+12.5% this week</p></div>
-<div class="bg-[#13132a] border border-[#222] rounded-xl p-3"><p class="text-gray-400 text-[11px]">Selling</p><p class="text-white font-black">₹1,980</p><p class="text-red-400 text-[10px]">-4.2% this week</p></div>
+<div class="bg-[#13132a] border border-[#222] rounded-xl p-3"><p class="text-gray-400 text-[11px]">Earning Rate</p><p class="text-white font-black text-[14px]">₹2,145 pts</p><p class="text-green-400 text-[10px]">+12.5%</p></div>
+<div class="bg-[#13132a] border border-[#222] rounded-xl p-3"><p class="text-gray-400 text-[11px]">Redeem Rate</p><p class="text-white font-black text-[14px]">₹1,980 pts</p><p class="text-red-400 text-[10px]">-4.2%</p></div>
 </div></div>
 
-<!-- Send / Sell -->
 <div class="grid grid-cols-2 gap-2 m-3">
-<button onclick="watchAd()" class="bg-[#7b5cff] text-white py-3.5 rounded-full font-bold">✈ Send MB</button>
-<button onclick="watchAd()" class="bg-[#13132a] border border-[#7b5cff] text-white py-3.5 rounded-full font-bold">⇄ Sell MB</button>
+<button onclick="watchAd()" class="bg-[#7b5cff] text-white py-3.5 rounded-full font-bold text-[13px]">✈ Send Points</button>
+<button onclick="watchAd()" class="bg-[#13132a] border border-[#7b5cff] text-white py-3.5 rounded-full font-bold text-[13px]">⇄ Redeem</button>
 </div>
 
 </div>
 
-<!-- Bottom 4 Buttons -->
 <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[410px] bg-[#0f0f24] border-t border-[#222] flex justify-around py-3">
 <button class="text-[#7b5cff] text-[10px] font-bold">🏠 Home</button>
 <button class="text-gray-500 text-[10px]">◫ Scan</button>
 <button class="text-gray-500 text-[10px]">🔔 History</button>
-<button class="text-gray-500 text-[10px]">👤 Portfolio</button>
+<button class="text-gray-500 text-[10px]">👤 You</button>
 </div>
 
-<!-- Owner Panel (5 tap) -->
-<div id="ownerPanel" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-<div class="bg-white rounded-xl p-4 w-full max-w-[320px]">
-<b>Owner Panel</b>
-<p class="text-[12px] mt-2">Total Earned GB: <span id="earned">0</span></p>
-<p class="text-[12px]">Ads Watched: <span id="ads">0</span></p>
-<button onclick="document.getElementById('ownerPanel').classList.add('hidden')" class="w
+<script>
+let bal=13.6;
+function update(){document.getElementById('bal').innerText=bal.toFixed(3);document.getElementById('inr').innerText=(bal*100).toFixed(0);}
+function watchAd(){alert('🎬 Ad...');setTimeout(()=>{bal+=1;update();alert('✅ 1 MB Coin Added!');},800);}
+update();
+</script>
+</body></html>
