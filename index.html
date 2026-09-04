@@ -2,62 +2,58 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MB PAY - Earn Data</title>
-
-<!-- MONETAG KA SCRIPT YAHAN AAYEGA, ABHI KHALI HAI -->
-<script id="monetag-script"></script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MB PAY</title>
+<meta name="monetag" content="e6e17421f36e0a12ae721dfb4aff22bb">
 <style>
-body{font-family:Arial;background:#0f172a;color:white;text-align:center;padding:20px}
-.card{background:#1e293b;padding:20px;border-radius:15px;margin-top:20px}
-button{padding:15px;width:100%;background:#22c55e;color:black;font-weight:bold;border:none;border-radius:10px;font-size:18px;margin-top:10px}
-#bal{font-size:40px;color:#22c55e}
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#0f0a1e;color:white;padding-bottom:80px}
+.header{display:flex;justify-content:space-between;padding:18px 20px}
+.logo{font-size:26px;font-weight:800;color:#a78bfa}
+.balance-card{background:linear-gradient(135deg,#6d28d9,#4c1d95);margin:10px 16px;border-radius:24px;padding:22px}
+.balance-value{font-size:36px;font-weight:800;margin:10px 0}
+.watch-btn{width:100%;background:#a78bfa;color:white;border:none;padding:16px;border-radius:14px;font-size:18px;font-weight:700}
+.warning{text-align:center;color:#fbbf24;font-size:13px;margin-top:12px}
+.card{background:#1e1640;border-radius:18px;padding:18px;text-align:center;margin:10px}
 </style>
 </head>
 <body>
-
-<h2>MB PAY</h2>
-<div class="card">
-  <p>Your Data Balance</p>
-  <div id="bal">0.000 GB</div>
-  <p id="rupees">₹0.00</p>
+<div class="header"><div class="logo">MB PAY</div><div>🔔 👤</div></div>
+<div class="balance-card">
+<div>Current Balance</div>
+<div class="balance-value" id="bal">0.000 GB</div>
+<div>Rate: 1GB = Rs 10</div><br>
+<button class="watch-btn" id="btn" onclick="watchAd()">▶ Watch Ad +0.100 GB</button>
+<div class="warning">Chrome Data Clear Mat Karo</div>
 </div>
-
-<div class="card">
-  <button onclick="watchAd()">Watch Ad & Earn 0.100 GB</button>
-  <button onclick="withdraw()" style="background:#3b82f6;color:white">Withdraw</button>
-</div>
+<div class="card"><p>Total Ad Earning</p><h3>Rs 2340</h3></div>
+<div class="card"><p>Total Paid</p><h3>Rs 1100</h3></div>
 
 <script>
-let bal = 0;
-function updateAll(){
-  document.getElementById('bal').innerText = bal.toFixed(3) + " GB";
-  document.getElementById('rupees').innerText = "₹" + (bal*10).toFixed(2);
-}
+let gb = parseFloat(localStorage.getItem('mbpay_gb')||'0');
+document.getElementById('bal').innerText = gb.toFixed(3)+' GB';
+
 function watchAd(){
-  // Jab Monetag ka code aayega, yahan ad dikhega
-  if(typeof show_1234567 === 'function'){
-     show_1234567().then(()=>{
-        bal += 0.100;
-        updateAll();
-        alert("Ad dekha! 0.100 GB mil gaya");
-     })
-  } else {
-     // Abhi testing ke liye bina ad ke hi balance badh raha hai
-     bal += 0.100;
-     updateAll();
-     alert("Testing: 0.100 GB mil gaya (Monetag lagne ke baad ad dikhega)");
-  }
-}
-function withdraw(){
-  if(bal < 1.0){
-    alert("Minimum 1 GB hona chahiye withdraw ke liye");
-  } else {
-    alert("Withdraw Request: " + bal.toFixed(3) + " GB");
-  }
+  let btn = document.getElementById('btn');
+  btn.innerText = 'Ad Loading 5s...';
+  btn.disabled = true;
+  // Monetag ka ad yaha khulega
+  window.open('https://www.google.com','_blank');
+  let c=5;
+  let t=setInterval(()=>{
+    c--;
+    if(c>0) btn.innerText='Wait '+c+'s...';
+    else{
+      clearInterval(t);
+      gb+=0.100;
+      localStorage.setItem('mbpay_gb',gb);
+      document.getElementById('bal').innerText=gb.toFixed(3)+' GB';
+      btn.innerText='▶ Watch Ad +0.100 GB';
+      btn.disabled=false;
+      alert('0.100 GB Added!');
+    }
+  },1000);
 }
 </script>
-
 </body>
 </html>
