@@ -1,58 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta name="monetag" content="e6e17421f36e0a12ae721dfb4aff22bb">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MB PAY</title>
+<title>MB-Pay</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:#0f0a1e;color:white;padding-bottom:80px}
-.header{display:flex;justify-content:space-between;padding:18px 20px}
-.logo{font-size:26px;font-weight:800;color:#a78bfa}
-.balance-card{background:linear-gradient(135deg,#6d28d9,#4c1d95);margin:10px 16px;border-radius:24px;padding:22px}
-.balance-value{font-size:36px;font-weight:800;margin:10px 0}
-.watch-btn{width:100%;background:#a78bfa;color:white;border:none;padding:16px;border-radius:14px;font-size:18px;font-weight:700}
-.warning{text-align:center;color:#fbbf24;font-size:13px;margin-top:12px}
-.card{background:#1e1640;border-radius:18px;padding:18px;text-align:center;margin:10px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#f5f7fb;padding:12px}
+.card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);margin-bottom:12px}
+.header{background:linear-gradient(135deg,#6a11cb,#2575fc);color:#fff;border-radius:20px;padding:20px}
+.balance{font-size:34px;font-weight:800;margin:8px 0}
+.btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.btn{padding:14px;border-radius:12px;border:none;font-weight:700;font-size:15px;cursor:pointer}
+.btn-primary{background:#2575fc;color:#fff}
+.btn-dark{background:#111;color:#fff}
+.btn-outline{background:#eef2ff;color:#2575fc;border:1px solid #c7d2fe}
+.input{width:100%;padding:13px;border-radius:10px;border:1px solid #ddd;margin:8px 0;font-size:15px}
+.hidden{display:none}
+.qr{width:180px;height:180px;margin:10px auto;display:block;border:1px solid #eee;border-radius:12px}
+.small{font-size:12px;color:#666}
 </style>
 </head>
 <body>
-<div class="header"><div class="logo">MB PAY</div><div>🔔 👤</div></div>
-<div class="balance-card">
-<div>Current Balance</div>
-<div class="balance-value" id="bal">0.000 GB</div>
-<div>Rate: 1GB = Rs 10</div><br>
-<button class="watch-btn" id="btn" onclick="watchAd()">▶ Watch Ad +0.100 GB</button>
-<div class="warning">Chrome Data Clear Mat Karo</div>
+<div class="card header">
+  <div>MB-Pay Wallet</div>
+  <div class="balance">₹ <span id="bal">0</span></div>
+  <div class="small" style="color:#e0e0ff">Merchant: mdamman804@okhdfcbank</div>
+  <div class="btn-grid">
+    <button class="btn btn-primary" onclick="openDeposit()">Deposit</button>
+    <button class="btn btn-dark" onclick="openWithdraw()">Withdraw</button>
+    <button class="btn btn-outline" onclick="openHistory()">History</button>
+    <button class="btn btn-outline" onclick="openUpiSetup()">Change UPI</button>
+  </div>
 </div>
-<div class="card"><p>Total Ad Earning</p><h3>Rs 2340</h3></div>
-<div class="card"><p>Total Paid</p><h3>Rs 1100</h3></div>
+
+<div id="depositBox" class="card hidden">
+  <h3>Deposit Money</h3>
+  <input id="depAmt" class="input" type="number" placeholder="Amount e.g. 100">
+  <button class="btn btn-primary" style="width:100%" onclick="doDeposit()">Pay Now</button>
+  <div id="depArea" class="hidden">
+    <img id="qrImg" class="qr">
+    <a id="upiLink" class="btn btn-dark" style="display:block;text-align:center;text-decoration:none;margin-top:8px" href="#" target="_blank">Pay via UPI App</a>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="confirmDeposit()">Confirm Deposit</button>
+  </div>
+</div>
+
+<div id="withdrawBox" class="card hidden">
+  <h3>Withdraw</h3>
+  <input id="withAmt" class="input" type="number" placeholder="Amount">
+  <input id="withUpi" class="input" type="text" placeholder="Your UPI ID">
+  <button class="btn btn-dark" style="width:100%" onclick="doWithdraw()">Request Withdraw</button>
+</div>
+
+<div id="historyBox" class="card hidden">
+  <h3>History</h3>
+  <div id="histList" class="small"></div>
+</div>
+
+<div id="upiBox" class="card hidden">
+  <h3>Merchant UPI</h3>
+  <input id="merchantUpi" class="input" type="text" value="mdamman804@okhdfcbank">
+  <input id="merchantName" class="input" type="text" value="MB Pay">
+  <button class="btn btn-primary" style="width:100%" onclick="saveUpi()">Save</button>
+</div>
 
 <script>
-let gb = parseFloat(localStorage.getItem('mbpay_gb')||'0');
-document.getElementById('bal').innerText = gb.toFixed(3)+' GB';
+const AD_LINK = "https://omg10.com/4/1173189";
+const FIXED_UPI = "mdamman804@okhdfcbank";
+const FIXED_NAME = "MB Pay";
+let balance = parseInt(localStorage.getItem('mb_bal')||'0');
+let history = JSON.parse(localStorage.getItem('mb_hist')||'[]');
+let merchantUpi = localStorage.getItem('mb_mupi') || FIXED_UPI;
+let merchantName = localStorage.getItem('mb_mname') || FIXED_NAME;
+localStorage.setItem('mb_mupi', merchantUpi);
 
-function watchAd(){
-  let btn = document.getElementById('btn');
-  btn.innerText = 'Ad Loading 5s...';
-  btn.disabled = true;
-  // Monetag ka ad yaha khulega
-  window.open('https://www.google.com','_blank');
-  let c=5;
-  let t=setInterval(()=>{
-    c--;
-    if(c>0) btn.innerText='Wait '+c+'s...';
-    else{
-      clearInterval(t);
-      gb+=0.100;
-      localStorage.setItem('mbpay_gb',gb);
-      document.getElementById('bal').innerText=gb.toFixed(3)+' GB';
-      btn.innerText='▶ Watch Ad +0.100 GB';
-      btn.disabled=false;
-      alert('0.100 GB Added!');
-    }
-  },1000);
+document.getElementById('bal').innerText = balance;
+document.getElementById('merchantUpi').value = merchantUpi;
+
+function hideAll(){
+  document.getElementById('depositBox').classList.add('hidden');
+  document.getElementById('withdrawBox').classList.add('hidden');
+  document.getElementById('historyBox').classList.add('hidden');
+  document.getElementById('upiBox').classList.add('hidden');
+}
+function openDeposit(){hideAll();document.getElementById('depositBox').classList.remove('hidden')}
+function openWithdraw(){hideAll();document.getElementById('withdrawBox').classList.remove('hidden')}
+function openHistory(){hideAll();document.getElementById('historyBox').classList.remove('hidden');renderHist()}
+function openUpiSetup(){hideAll();document.getElementById('upiBox').classList.remove('hidden')}
+function saveUpi(){
+  let u = document.getElementById('merchantUpi').value.trim();
+  let n = document.getElementById('merchantName').value.trim()||'MB Pay';
+  localStorage.setItem('mb_mupi',u); localStorage.setItem('mb_mname',n);
+  merchantUpi=u; merchantName=n; alert('UPI Updated: '+u); hideAll();
+}
+function doDeposit(){
+  let amt = document.getElementById('depAmt').value;
+  if(!amt){alert('Amount dalo');return}
+  window.open(AD_LINK,'_blank');
+  let upiUrl = `upi://pay?pa=${merchantUpi}&pn=${encodeURIComponent(merchantName)}&am=${amt}&cu=INR&tn=MBPay`;
+  document.getElementById('upiLink').href = upiUrl;
+  document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+  document.getElementById('depArea').classList.remove('hidden');
+  window._pendingAmt = amt;
+}
+function confirmDeposit(){
+  let amt = parseInt(window._pendingAmt||0);
+  balance+=amt; localStorage.setItem('mb_bal',balance);
+  document.getElementById('bal').innerText=balance;
+  history.unshift({type:'Deposit',amt:amt,time:new Date().toLocaleString(),status:'Success'});
+  localStorage.setItem('mb_hist',JSON.stringify(history));
+  alert('₹'+amt+' Deposit Success!');
+  document.getElementById('depArea').classList.add('hidden'); document.getElementById('depAmt').value='';
+}
+function doWithdraw(){
+  window.open(AD_LINK,'_blank');
+  let amt = parseInt(document.getElementById('withAmt').value);
+  let upi = document.getElementById('withUpi').value;
+  if(!amt || !upi){alert('Amount aur UPI dalo');return}
+  if(amt>balance){alert('Balance kam hai');return}
+  balance-=amt; localStorage.setItem('mb_bal',balance);
+  document.getElementById('bal').innerText=balance;
+  history.unshift({type:'Withdraw to '+upi,amt:amt,time:new Date().toLocaleString(),status:'Pending'});
+  localStorage.setItem('mb_hist',JSON.stringify(history));
+  alert('Withdraw ₹'+amt+' to '+upi);
+}
+function renderHist(){
+  let html = history.length? history.map(h=>`<div style="padding:8px;border-bottom:1px solid #eee"><b>${h.type}</b> - ₹${h.amt}<br>${h.time} - ${h.status}</div>`).join('') : 'No history';
+  document.getElementById('histList').innerHTML = html;
 }
 </script>
 </body>
