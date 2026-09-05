@@ -4,99 +4,103 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MB-Pay</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}body{background:#f5f7fb;padding:12px}
-.card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);margin-bottom:12px}
-.header{background:linear-gradient(135deg,#6a11cb,#2575fc);color:#fff;border-radius:20px;padding:20px}
-.balance{font-size:34px;font-weight:800;margin:8px 0}
-.btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.btn{padding:14px;border-radius:12px;border:none;font-weight:700;font-size:15px;cursor:pointer}
-.btn-primary{background:#2575fc;color:#fff}.btn-dark{background:#111;color:#fff}
-.btn-outline{background:#eef2ff;color:#2575fc;border:1px solid #c7d2fe}
-.input{width:100%;padding:13px;border-radius:10px;border:1px solid #ddd;margin:8px 0;font-size:15px}
-.hidden{display:none}.qr{width:180px;height:180px;margin:10px auto;display:block;border-radius:12px}
-.small{font-size:12px;color:#666}
-.admin{background:#111;color:#fff}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui}
+body{background:#eef1f7;display:flex;justify-content:center}
+.phone{width:100%;max-width:420px;background:#f6f7fb;min-height:100vh;position:relative;padding-bottom:85px}
+.top{background:linear-gradient(135deg,#2d0a6b,#6a11cb 60%,#7b2cf0);border-radius:0 0 32px 32px;padding:22px 20px 34px;color:#fff}
+.top-head{display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:22px;display:flex;align-items:center;gap:8px}
+.logo span{background:#fff;color:#4a0db7;border-radius:8px;padding:4px 6px}
+.balance-box{text-align:center;margin-top:18px}
+.bal-label{color:#c9a7ff;font-size:14px}.bal{font-size:56px;font-weight:900;line-height:1}
+.mupi{font-size:13px;margin-top:8px;opacity:.9}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px}
+.btn-card{border-radius:16px;padding:18px;text-align:center;font-weight:700;border:none;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.07)}
+.dep{background:#2b5cff;color:#fff}.with{background:#101010;color:#fff}
+.his,.adm{background:#fff;color:#222}
+.card{background:#fff;border-radius:20px;margin:12px 16px;padding:16px;box-shadow:0 8px 20px rgba(0,0,0,.06)}
+.input{width:100%;padding:14px;border-radius:12px;border:1px solid #ddd;margin:8px 0}
+.pbtn{width:100%;padding:14px;border-radius:12px;border:none;font-weight:800;background:#2b5cff;color:#fff;cursor:pointer}
+.qr{width:140px;height:140px;margin:12px auto;display:block}
+.hidden{display:none}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:#fff;border-radius:20px 20px 0 0;display:flex;justify-content:space-around;padding:12px 0;box-shadow:0 -4px 20px rgba(0,0,0,.08);z-index:99}
+.bottom-nav div{font-size:11px;font-weight:700;text-align:center;color:#888;cursor:pointer;padding:4px 12px;border-radius:10px}
+.bottom-nav div.active{color:#4a0db7;background:#f0e9ff}
+.small{font-size:11px;color:#666}
 </style>
 </head>
 <body>
-<div class="card header">
-  <div>MB-Pay Wallet</div>
-  <div class="balance">₹ <span id="bal">0</span></div>
-  <div class="small" style="color:#e0e0ff">Merchant: mdamman804@okhdfcbank</div>
-  <div class="btn-grid">
-    <button class="btn btn-primary" onclick="openDeposit()">Deposit</button>
-    <button class="btn btn-dark" onclick="openWithdraw()">Withdraw</button>
-    <button class="btn btn-outline" onclick="openHistory()">History</button>
-    <button class="btn btn-outline" onclick="openAdmin()">Admin</button>
+<div class="phone">
+  <div class="top">
+    <div class="top-head"><div class="logo"><span>₿</span> MB-Pay</div><div style="display:flex;gap:12px"><span onclick="openNotification()" style="cursor:pointer">🔔</span><span onclick="openProfile()" style="cursor:pointer">👤</span></div></div>
+    <div class="balance-box">
+      <div class="bal-label">Balance</div>
+      <div class="bal">₹ <span id="bal">0</span></div>
+      <div class="mupi">Merchant UPI<br><b>mdamman804@okhdfcbank</b></div>
+    </div>
+  </div>
+
+  <div class="grid" id="homeGrid">
+    <button class="btn-card dep" onclick="openDeposit()">⬇️<br>Deposit</button>
+    <button class="btn-card with" onclick="openWithdraw()">↗️<br>Withdraw</button>
+    <button class="btn-card his" onclick="openHistory()">🕒<br>History</button>
+    <button class="btn-card adm" onclick="openAdmin()">🛡️<br>Admin</button>
+  </div>
+
+  <div id="depositBox" class="card">
+    <div style="display:flex;justify-content:space-between"><h3>Deposit</h3><span class="small" style="background:#eef2ff;padding:4px 8px;border-radius:20px">Instant UPI Deposit</span></div>
+    <input id="depAmt" class="input" type="number" placeholder="Enter amount e.g. 500">
+    <button class="pbtn" onclick="doDeposit()">Create UPI QR</button>
+    <div id="depArea" class="hidden" style="text-align:center">
+      <img id="qrImg" class="qr">
+      <p class="small">Scan to deposit to MB-Pay wallet<br><b>mdamman804@okhdfcbank</b></p>
+      <a id="upiLink" class="pbtn" style="display:block;text-decoration:none;margin-top:10px" target="_blank">Pay via UPI App</a>
+      <button class="pbtn" style="margin-top:8px;background:#111" onclick="confirmDeposit()">I Have Paid</button>
+    </div>
+  </div>
+
+  <div id="withdrawBox" class="card hidden"><h3>Withdraw</h3><input id="withAmt" class="input" type="number" placeholder="Min ₹100"><input id="withUpi" class="input" placeholder="Your UPI ID"><button class="pbtn" style="background:#111" onclick="doWithdraw()">Request Withdraw</button></div>
+  <div id="historyBox" class="card hidden"><h3>History</h3><div id="histList" class="small" style="margin-top:10px"></div></div>
+  <div id="adminBox" class="card hidden" style="background:#111;color:#fff"><h3>Admin Panel</h3><p class="small" style="color:#aaa">Pass: amman123</p><input id="adminPass" class="input" type="password" placeholder="Password"><button class="pbtn" onclick="checkAdmin()">Open</button><div id="adminData" class="hidden" style="margin-top:12px"></div></div>
+
+  <!-- NEW PAGES FOR BOTTOM NAV -->
+  <div id="cardsBox" class="card hidden"><h3>💳 My Cards</h3><div style="background:linear-gradient(135deg,#2d0a6b,#6a11cb);border-radius:16px;padding:20px;color:#fff;margin-top:12px"><p>MB-Pay Virtual Card</p><h2 style="margin:10px 0">4242 4242 4242 4242</h2><p class="small" style="color:#ddd">Balance: ₹ <span class="balTxt">0</span></p></div><p class="small" style="margin-top:10px">Use this card for online payments. Real card coming soon.</p></div>
+
+  <div id="paymentsBox" class="card hidden"><h3>🧾 Payments</h3><div style="margin-top:12px"><button class="pbtn" style="margin-bottom:8px;background:#fff;color:#222;border:1px solid #ddd" onclick="openDeposit()">📲 Mobile Recharge</button><button class="pbtn" style="margin-bottom:8px;background:#fff;color:#222;border:1px solid #ddd" onclick="openDeposit()">💡 Bill Payment</button><button class="pbtn" style="background:#fff;color:#222;border:1px solid #ddd" onclick="openDeposit()">📺 DTH Recharge</button></div></div>
+
+  <div id="profileBox" class="card hidden"><h3>👤 Profile</h3><div style="margin-top:12px"><p><b>Name:</b> MB-Pay User</p><p><b>Merchant UPI:</b> mdamman804@okhdfcbank</p><p><b>Balance:</b> ₹ <span class="balTxt">0</span></p><p class="small" style="margin-top:12px">Support: mdamman804@okhdfcbank pe contact karo</p><button class="pbtn" style="margin-top:12px;background:#111" onclick="localStorage.clear();location.reload()">Logout / Clear Data</button></div></div>
+
+  <div id="notifBox" class="card hidden"><h3>🔔 Notifications</h3><p class="small" style="margin-top:10px">✅ Welcome to MB-Pay!<br>✅ Deposit is Instant<br>✅ Withdraw in 1 hour</p></div>
+
+  <div class="bottom-nav">
+    <div id="navHome" class="active" onclick="goHome()">🏠<br>Home</div>
+    <div id="navCards" onclick="goCards()">💳<br>Cards</div>
+    <div id="navPayments" onclick="goPayments()">🧾<br>Payments</div>
+    <div id="navProfile" onclick="openProfile()">👤<br>Profile</div>
   </div>
 </div>
 
-<div id="depositBox" class="card hidden">
-  <h3>Deposit</h3><input id="depAmt" class="input" type="number" placeholder="Amount">
-  <button class="btn btn-primary" style="width:100%" onclick="doDeposit()">Pay Now</button>
-  <div id="depArea" class="hidden"><img id="qrImg" class="qr"><a id="upiLink" class="btn btn-dark" style="display:block;text-align:center;text-decoration:none;margin-top:8px" target="_blank">Pay via UPI App</a><button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="confirmDeposit()">Confirm Deposit</button></div>
-</div>
-
-<div id="withdrawBox" class="card hidden">
-  <h3>Withdraw</h3><input id="withAmt" class="input" type="number" placeholder="Amount"><input id="withUpi" class="input" type="text" placeholder="Your UPI ID"><button class="btn btn-dark" style="width:100%" onclick="doWithdraw()">Request Withdraw</button>
-</div>
-
-<div id="historyBox" class="card hidden"><h3>History</h3><div id="histList" class="small"></div></div>
-
-<div id="adminBox" class="card admin hidden">
-  <h3>Admin Panel - Withdraw Requests</h3>
-  <p class="small" style="color:#aaa">Password: amman123</p>
-  <input id="adminPass" class="input" type="password" placeholder="Enter Admin Password">
-  <button class="btn btn-primary" style="width:100%" onclick="checkAdmin()">Open Admin</button>
-  <div id="adminData" class="hidden" style="margin-top:12px"></div>
-</div>
-
 <script>
-const AD_LINK="https://omg10.com/4/1173189";
-const FIXED_UPI="mdamman804@okhdfcbank"; const FIXED_NAME="MB Pay";
-let balance=parseInt(localStorage.getItem('mb_bal')||'0');
-let history=JSON.parse(localStorage.getItem('mb_hist')||'[]');
-let merchantUpi=localStorage.getItem('mb_mupi')||FIXED_UPI;
-document.getElementById('bal').innerText=balance;
-function hideAll(){['depositBox','withdrawBox','historyBox','adminBox'].forEach(id=>document.getElementById(id).classList.add('hidden'))}
-function openDeposit(){hideAll();document.getElementById('depositBox').classList.remove('hidden')}
-function openWithdraw(){hideAll();document.getElementById('withdrawBox').classList.remove('hidden')}
-function openHistory(){hideAll();document.getElementById('historyBox').classList.remove('hidden');renderHist()}
-function openAdmin(){hideAll();document.getElementById('adminBox').classList.remove('hidden')}
-function doDeposit(){
-  let amt=document.getElementById('depAmt').value; if(!amt)return alert('Amount dalo');
-  window.open(AD_LINK,'_blank');
-  let upiUrl=`upi://pay?pa=${merchantUpi}&pn=${encodeURIComponent(FIXED_NAME)}&am=${amt}&cu=INR`;
-  document.getElementById('upiLink').href=upiUrl;
-  document.getElementById('qrImg').src=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
-  document.getElementById('depArea').classList.remove('hidden'); window._pendingAmt=amt;
-}
-function confirmDeposit(){
-  let amt=parseInt(window._pendingAmt||0); balance+=amt; localStorage.setItem('mb_bal',balance);
-  document.getElementById('bal').innerText=balance;
-  history.unshift({type:'Deposit',amt:amt,time:new Date().toLocaleString(),status:'Success'});
-  localStorage.setItem('mb_hist',JSON.stringify(history)); alert('Deposit Success ₹'+amt);
-  document.getElementById('depArea').classList.add('hidden');
-}
-function doWithdraw(){
-  window.open(AD_LINK,'_blank');
-  let amt=parseInt(document.getElementById('withAmt').value); let upi=document.getElementById('withUpi').value;
-  if(!amt||!upi)return alert('Amount aur UPI dalo'); if(amt>balance)return alert('Balance kam hai');
-  balance-=amt; localStorage.setItem('mb_bal',balance); document.getElementById('bal').innerText=balance;
-  history.unshift({type:'Withdraw to '+upi,amt:amt,upi:upi,time:new Date().toLocaleString(),status:'Pending'});
-  localStorage.setItem('mb_hist',JSON.stringify(history)); alert('Withdraw Request Sent ₹'+amt);
-}
-function renderHist(){
-  document.getElementById('histList').innerHTML=history.length?history.map(h=>`<div style="padding:8px;border-bottom:1px solid #eee"><b>${h.type}</b> - ₹${h.amt}<br>${h.time} - ${h.status}</div>`).join(''):'No history';
-}
-function checkAdmin(){
-  if(document.getElementById('adminPass').value!=='amman123')return alert('Wrong Password');
-  let box=document.getElementById('adminData'); box.classList.remove('hidden');
-  let pending=history.filter(h=>h.type.includes('Withdraw'));
-  if(!pending.length)box.innerHTML='No withdraw requests';
-  else box.innerHTML=pending.map((h,i)=>`<div style="background:#222;padding:10px;border-radius:10px;margin-bottom:8px"><b>₹${h.amt}</b> to ${h.upi||h.type}<br><span class="small">${h.time}</span><br><button onclick="markPaid(${i})" style="margin-top:6px;padding:6px 10px;border-radius:6px;border:none;background:#25D366;color:#fff">Mark Paid</button></div>`).join('');
-}
-function markPaid(idx){alert('Is UPI ko apne PhonePe se ₹ bhejo: '+history[idx].upi); history[idx].status='Paid'; localStorage.setItem('mb_hist',JSON.stringify(history)); checkAdmin();}
+const AD_LINK="https://omg10.com/4/1173189"; const FIXED_UPI="mdamman804@okhdfcbank";
+let balance=parseInt(localStorage.getItem('mb_bal')||'0'); let history=JSON.parse(localStorage.getItem('mb_hist')||'[]');
+function updateBal(){document.getElementById('bal').innerText=balance;document.querySelectorAll('.balTxt').forEach(e=>e.innerText=balance)}
+updateBal();
+function hideAllPages(){document.querySelectorAll('.card').forEach(c=>c.classList.add('hidden'));document.getElementById('homeGrid').classList.add('hidden');document.querySelectorAll('.bottom-nav div').forEach(d=>d.classList.remove('active'))}
+function goHome(){hideAllPages();document.getElementById('homeGrid').classList.remove('hidden');document.getElementById('depositBox').classList.remove('hidden');document.getElementById('navHome').classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function goCards(){hideAllPages();document.getElementById('cardsBox').classList.remove('hidden');document.getElementById('navCards').classList.add('active')}
+function goPayments(){hideAllPages();document.getElementById('paymentsBox').classList.remove('hidden');document.getElementById('navPayments').classList.add('active')}
+function openProfile(){hideAllPages();document.getElementById('profileBox').classList.remove('hidden');document.getElementById('navProfile').classList.add('active')}
+function openNotification(){hideAllPages();document.getElementById('notifBox').classList.remove('hidden')}
+function openDeposit(){hideAllPages();document.getElementById('homeGrid').classList.remove('hidden');document.getElementById('depositBox').classList.remove('hidden');document.getElementById('navHome').classList.add('active')}
+function openWithdraw(){hideAllPages();document.getElementById('homeGrid').classList.remove('hidden');document.getElementById('withdrawBox').classList.remove('hidden');document.getElementById('navHome').classList.add('active')}
+function openHistory(){hideAllPages();document.getElementById('homeGrid').classList.remove('hidden');document.getElementById('historyBox').classList.remove('hidden');document.getElementById('navHome').classList.add('active');renderHist()}
+function openAdmin(){hideAllPages();document.getElementById('homeGrid').classList.remove('hidden');document.getElementById('adminBox').classList.remove('hidden');document.getElementById('navHome').classList.add('active')}
+function doDeposit(){let amt=document.getElementById('depAmt').value;if(!amt||amt<1)return alert('Amount dalo');window.open(AD_LINK,'_blank');let upiUrl=`upi://pay?pa=${FIXED_UPI}&pn=MB-Pay&am=${amt}&cu=INR`;document.getElementById('upiLink').href=upiUrl;document.getElementById('qrImg').src=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;document.getElementById('depArea').classList.remove('hidden');window._pendingAmt=amt}
+function confirmDeposit(){let amt=parseInt(window._pendingAmt||0);balance+=amt;localStorage.setItem('mb_bal',balance);updateBal();history.unshift({type:'Deposit',amt:amt,time:new Date().toLocaleString(),status:'Success'});localStorage.setItem('mb_hist',JSON.stringify(history));alert('Deposit ₹'+amt+' Added');document.getElementById('depArea').classList.add('hidden')}
+function doWithdraw(){window.open(AD_LINK,'_blank');let amt=parseInt(document.getElementById('withAmt').value);let upi=document.getElementById('withUpi').value;if(!amt||!upi)return alert('Amount+UPI dalo');if(amt<100)return alert('Min ₹100');if(amt>balance)return alert('Balance kam');balance-=amt;localStorage.setItem('mb_bal',balance);updateBal();history.unshift({type:'Withdraw to '+upi,amt:amt,upi:upi,time:new Date().toLocaleString(),status:'Pending'});localStorage.setItem('mb_hist',JSON.stringify(history));alert('Withdraw Request Sent')}
+function renderHist(){document.getElementById('histList').innerHTML=history.length?history.map(h=>`<div style="padding:10px;border-bottom:1px solid #eee"><b>${h.type}</b> - ₹${h.amt}<br>${h.time} - ${h.status}</div>`).join(''):'No history'}
+function checkAdmin(){if(document.getElementById('adminPass').value!=='amman123')return alert('Wrong Pass');let box=document.getElementById('adminData');box.classList.remove('hidden');let pending=history.filter(h=>h.status==='Pending');box.innerHTML=pending.length?pending.map((h)=>`<div style="background:#222;padding:10px;border-radius:10px;margin-bottom:8px"><b>₹${h.amt}</b> to ${h.upi}<br><span class="small" style="color:#aaa">${h.time}</span><br><button onclick="markPaid('${h.time}')" style="margin-top:6px;padding:6px 10px;border-radius:6px;border:none;background:#25D366;color:#fff">Mark Paid</button></div>`).join(''):'No Pending'}
+function markPaid(t){let idx=history.findIndex(h=>h.time===t);if(idx>-1){history[idx].status='Paid';localStorage.setItem('mb_hist',JSON.stringify(history));alert('Paid: '+history[idx].upi);checkAdmin()}}
 </script>
 </body>
 </html>
