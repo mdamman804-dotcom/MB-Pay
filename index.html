@@ -1,49 +1,359 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MB-Pay Premium</title>
+<meta name="description" content="MB-Pay Premium is a simple rewards and account management web app. Learn about MB Coins, account history, withdrawals and platform information.">
+
+<!-- AdSense: REPLACE BOTH PLACEHOLDERS WITH YOUR REAL VALUES AFTER APPROVAL -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-PASTE_YOUR_PUBLISHER_ID" crossorigin="anonymous"></script>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:#f5f3ff}
-.header{background:#5b21b6;color:#fff;padding:15px;display:flex;justify-content:space-between}
-.bal-card{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;margin:15px;padding:20px;border-radius:20px}
-.bal-card h1{font-size:32px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:15px}
-.btn{background:#fff;padding:18px;border-radius:15px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.05);cursor:pointer;font-weight:700}
-.task-box{background:#fff;margin:15px;padding:20px;border-radius:15px;text-align:center}
-.watch-btn{background:#22c55e;color:#fff;padding:15px;border:none;border-radius:50px;font-size:18px;font-weight:800;width:100%;cursor:pointer}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #ddd}
-.page{display:none;padding-bottom:80px}.active{display:block}
-input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #ccc}
-</style></head>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+header{background:#101828;color:#fff;padding:16px;position:sticky;top:0;z-index:5}
+.header-row{display:flex;justify-content:space-between;align-items:center;max-width:900px;margin:auto}
+.logo{font-size:22px;font-weight:800}
+nav{max-width:900px;margin:12px auto 0;display:flex;gap:8px;overflow:auto}
+nav button{border:0;background:#24324a;color:#fff;padding:9px 12px;border-radius:8px;white-space:nowrap;cursor:pointer}
+main{max-width:900px;margin:auto;padding:18px}
+.page{display:none}
+.page.active{display:block}
+.card{background:#fff;border-radius:16px;padding:18px;margin:12px 0;box-shadow:0 4px 18px rgba(0,0,0,.07)}
+.balance{font-size:34px;font-weight:800;margin:8px 0}
+.stat{display:inline-block;background:#eef3ff;padding:10px 14px;border-radius:10px;margin:4px}
+button.primary{width:100%;border:0;background:#1769ff;color:#fff;padding:13px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer}
+button.secondary{border:0;background:#e8edf5;padding:10px 14px;border-radius:9px;cursor:pointer}
+input,textarea{width:100%;padding:12px;margin:7px 0;border:1px solid #ccd4e0;border-radius:9px}
+.small{font-size:13px;color:#667085;line-height:1.6}
+h1,h2{margin-top:6px}
+.menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.history{border-bottom:1px solid #eee;padding:10px 0}
+.adbox{min-height:100px;display:flex;align-items:center;justify-content:center;background:#fafafa;border:1px dashed #ccd4e0;border-radius:10px;margin:12px 0}
+.notice{background:#fff8e6;border-left:4px solid #f0a500;padding:12px;border-radius:8px}
+footer{text-align:center;padding:25px;color:#667085}
+a{color:#1769ff}
+@media(max-width:600px){main{padding:12px}.menu-grid{grid-template-columns:1fr}}
+</style>
+</head>
+
 <body>
-<div class="header"><b>MB-Pay Premium</b><div><span onclick="openPage('notif')">🔔</span> <span onclick="openPage('profile')">👤</span></div></div>
+<header>
+  <div class="header-row">
+    <div class="logo">MB-Pay Premium</div>
+    <div>ðŸª™ <span id="coinTop">0</span></div>
+  </div>
+  <nav>
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('about')">About</button>
+    <button onclick="showPage('privacy')">Privacy</button>
+    <button onclick="showPage('terms')">Terms</button>
+    <button onclick="showPage('contact')">Contact</button>
+  </nav>
+</header>
 
-<div id="home" class="page active">
-<div class="bal-card"><p>Total Balance</p><h1>₹ <span id="balance">0</span></h1><p>Ads: <span id="count">0</span></p></div>
-<div class="task-box"><h3>Ads Dekho Paisa Lo</h3><br><p>1 Ad = ₹10</p><br><button class="watch-btn" onclick="watchAd()">▶️ Watch Ad - Earn ₹10</button><p id="msg"></p></div>
-<div class="grid"><div class="btn" onclick="openPage('deposit')">💰 Deposit</div><div class="btn" onclick="openPage('withdraw')">🏧 Withdraw</div><div class="btn" onclick="openPage('history')">📜 History</div><div class="btn" onclick="adminLogin()">🛡️ Admin</div></div>
-</div>
+<main>
 
-<div id="deposit" class="page"><div style="padding:15px"><h2>Deposit</h2><input id="depAmt" placeholder="Amount"><button class="watch-btn" onclick="doDeposit()">Deposit Now</button><div id="qrArea"></div><button onclick="openPage('home')">Back</button></div></div>
-<div id="withdraw" class="page"><div style="padding:15px"><h2>Withdraw</h2><input id="wAmt" placeholder="Min 100"><input id="wUpi" placeholder="UPI"><button class="watch-btn" style="background:#5b21b6" onclick="doWithdraw()">Withdraw</button><button onclick="openPage('home')">Back</button></div></div>
-<div id="history" class="page"><div style="padding:15px"><h2>History</h2><div id="histList"></div><button onclick="openPage('home')">Back</button></div></div>
-<div id="notif" class="page"><div style="padding:15px"><h2>Notification</h2><p>Roz 50 Ads dekh ke ₹500 kamao!</p><button onclick="openPage('home')">Back</button></div></div>
-<div id="profile" class="page"><div style="padding:15px"><h2>Profile</h2><p>UPI: mdamman804@okhdfcbank</p><button onclick="openPage('home')">Back</button></div></div>
-<div id="admin" class="page"><div style="padding:15px"><h2>Admin</h2><div id="adminData"></div><button onclick="openPage('home')">Back</button></div></div>
+<section id="home" class="page active">
+  <div class="card">
+    <h1>Welcome to MB-Pay</h1>
+    <p>MB-Pay Premium is a simple web platform for managing an in-app rewards balance, viewing activity history and submitting account requests.</p>
+    <div class="notice">MB Coins are in-app rewards. They are not cash and are not automatically convertible to money.</div>
+  </div>
 
-<div class="nav"><div onclick="openPage('home')">🏠 Home</div><div onclick="openPage('deposit')">💳 Cards</div><div onclick="openPage('withdraw')">💸 Pay</div><div onclick="openPage('profile')">👤 Profile</div></div>
+  <div class="card">
+    <h2>My Rewards</h2>
+    <div class="balance"><span id="coins">0</span> MB Coins</div>
+    <div class="stat">Daily reward: 10 Coins</div>
+    <div class="stat">Withdrawal: <span id="withdrawStatus">OFF</span></div>
+    <br><br>
+    <button class="primary" onclick="claimDaily()">Claim Daily Reward</button>
+    <p id="rewardMsg" class="small"></p>
+  </div>
+
+  <div class="card">
+    <h2>Advertisement</h2>
+    <p class="small">Ads help support the website. Please interact with advertisements only when you are genuinely interested. Do not click ads repeatedly or ask others to click them.</p>
+
+    <!-- AdSense display unit: replace data-ad-client and data-ad-slot after AdSense setup -->
+    <div class="adbox">
+      <ins class="adsbygoogle"
+           style="display:block;width:100%"
+           data-ad-client="ca-pub-PASTE_YOUR_PUBLISHER_ID"
+           data-ad-slot="PASTE_YOUR_AD_SLOT"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Quick Menu</h2>
+    <div class="menu-grid">
+      <button class="secondary" onclick="showPage('history')">ðŸ“œ History</button>
+      <button class="secondary" onclick="showPage('withdraw')">ðŸ’¸ Withdraw</button>
+      <button class="secondary" onclick="showPage('profile')">ðŸ‘¤ Profile</button>
+      <button class="secondary" onclick="showPage('notification')">ðŸ”” Notifications</button>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="page">
+  <div class="card">
+    <h1>About MB-Pay</h1>
+    <p>MB-Pay Premium is a web-based rewards platform created to provide a straightforward interface for users to manage MB Coins and review their account activity.</p>
+    <h2>What can users do?</h2>
+    <ul>
+      <li>View their MB Coin balance.</li>
+      <li>Claim eligible in-app rewards.</li>
+      <li>Review reward history.</li>
+      <li>Manage basic profile information.</li>
+      <li>Submit a withdrawal request when the feature is officially enabled.</li>
+    </ul>
+    <h2>How MB Coins work</h2>
+    <p>MB Coins are platform rewards. They should not be represented as guaranteed cash earnings. Any future payout program will be subject to separate eligibility rules, available balance and manual verification.</p>
+  </div>
+</section>
+
+<section id="privacy" class="page">
+  <div class="card">
+    <h1>Privacy Policy</h1>
+    <p>MB-Pay respects user privacy. This page explains the general information practices of the website.</p>
+    <h2>Information we may store</h2>
+    <p>The current demo version may store basic settings, reward history and profile information in the browser's local storage. This information remains on the user's device unless the user clears their browser data.</p>
+    <h2>Advertising</h2>
+    <p>MB-Pay may display advertisements provided by third-party advertising services such as Google AdSense. Those services may use cookies or similar technologies according to their own policies.</p>
+    <h2>Security</h2>
+    <p>The current browser-only version should not be used to store sensitive financial information. A secure server and database are required before real-money transactions are introduced.</p>
+    <h2>Contact</h2>
+    <p>For privacy questions, use the Contact page.</p>
+  </div>
+</section>
+
+<section id="terms" class="page">
+  <div class="card">
+    <h1>Terms &amp; Conditions</h1>
+    <p>By using MB-Pay, you agree to use the platform honestly and responsibly.</p>
+    <ul>
+      <li>Do not create fraudulent activity or manipulate rewards.</li>
+      <li>Do not use automated tools to generate rewards or ad interactions.</li>
+      <li>Do not repeatedly click advertisements for the purpose of generating revenue.</li>
+      <li>MB Coins are not guaranteed cash and may be changed, paused or discontinued.</li>
+      <li>Withdrawal, if enabled, may require manual verification.</li>
+      <li>The website owner may suspend accounts that violate platform rules.</li>
+    </ul>
+    <p class="small">Before launching a real-money payout system, replace this demo policy with terms reviewed for your actual business and applicable local laws.</p>
+  </div>
+</section>
+
+<section id="contact" class="page">
+  <div class="card">
+    <h1>Contact MB-Pay</h1>
+    <p>If you have a question about your account or rewards, contact the website administrator.</p>
+    <label>Name</label>
+    <input id="contactName" placeholder="Your name">
+    <label>Email</label>
+    <input id="contactEmail" type="email" placeholder="you@example.com">
+    <label>Message</label>
+    <textarea id="contactMessage" rows="5" placeholder="Write your message"></textarea>
+    <button class="primary" onclick="sendContact()">Send Message</button>
+    <p id="contactMsg" class="small"></p>
+  </div>
+</section>
+
+<section id="history" class="page">
+  <div class="card">
+    <h1>Reward History</h1>
+    <div id="historyList"></div>
+  </div>
+</section>
+
+<section id="withdraw" class="page">
+  <div class="card">
+    <h1>Withdrawal</h1>
+    <div id="withdrawBox"></div>
+  </div>
+</section>
+
+<section id="profile" class="page">
+  <div class="card">
+    <h1>Profile</h1>
+    <input id="profileName" placeholder="Name">
+    <input id="profileEmail" type="email" placeholder="Email">
+    <button class="primary" onclick="saveProfile()">Save Profile</button>
+    <p id="profileMsg" class="small"></p>
+  </div>
+</section>
+
+<section id="notification" class="page">
+  <div class="card">
+    <h1>Notifications</h1>
+    <p>Welcome to MB-Pay Premium.</p>
+    <p class="small">Reward and withdrawal availability may change when the platform is updated.</p>
+  </div>
+</section>
+
+<section id="admin" class="page">
+  <div class="card">
+    <h1>Admin</h1>
+    <p class="small">This demo control is browser-only and is NOT secure for a real-money system.</p>
+    <input id="adminPassword" type="password" placeholder="Admin password">
+    <button class="primary" onclick="adminLogin()">Admin Login</button>
+    <div id="adminPanel"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Â© 2026 MB-Pay Premium Â· <a href="#" onclick="showPage('about');return false">About</a> Â·
+  <a href="#" onclick="showPage('privacy');return false">Privacy</a> Â·
+  <a href="#" onclick="showPage('terms');return false">Terms</a> Â·
+  <a href="#" onclick="showPage('contact');return false">Contact</a>
+  <br><br>
+  <button class="secondary" onclick="showPage('admin')">Admin</button>
+</footer>
 
 <script>
-let AD_LINK="https://www.omg10.com/4/1173189"; let UPI="mdamman804@okhdfcbank";
-let bal=parseInt(localStorage.getItem('mb_bal')||0); let cnt=parseInt(localStorage.getItem('mb_cnt')||0);
-let hist=JSON.parse(localStorage.getItem('mb_hist')||"[]"); let wReq=JSON.parse(localStorage.getItem('mb_w')||"[]");
-document.getElementById('balance').innerText=bal; document.getElementById('count').innerText=cnt;
-function openPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p).classList.add('active'); if(p=='history')renderHist(); if(p=='admin')renderAdmin();}
-function watchAd(){window.open(AD_LINK,'_blank'); setTimeout(()=>{bal+=10; cnt++; localStorage.setItem('mb_bal',bal); localStorage.setItem('mb_cnt',cnt); hist.push({t:'+ ₹10 Ad',time:new Date().toLocaleString()}); localStorage.setItem('mb_hist',JSON.stringify(hist)); document.getElementById('balance').innerText=bal; document.getElementById('count').innerText=cnt; document.getElementById('msg').innerText='₹10 Added!';},1500);}
-function doDeposit(){let amt=document.getElementById('depAmt').value; window.open(AD_LINK,'_blank'); document.getElementById('qrArea').innerHTML=`<br><p>Pay to ${UPI}</p><img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=${UPI}&am=${amt}"><br><button class="watch-btn" onclick="confirmDep(${amt})">I Paid</button>`;}
-function confirmDep(amt){bal+=parseInt(amt); localStorage.setItem('mb_bal',bal); alert('Added'); location.reload();}
-function doWithdraw(){let amt=parseInt(document.getElementById('wAmt').value); let upi=document.getElementById('wUpi').value; if(amt>bal)return alert('Balance kam hai'); window.open(AD_LINK,'_blank'); bal-=amt; localStorage.setItem('mb_bal',bal); wReq.push({amt,upi,time:new Date().toLocaleString()}); localStorage.setItem('mb_w',JSON.stringify(wReq)); alert('Request Sent'); location.reload();}
-function renderHist(){let h='';hist.slice().reverse().forEach(x=>{h+=`<div style="background:#fff;padding:10px;margin:5px;border-radius:10px">${x.t}<br><small>${x.time}</small></div>`}); document.getElementById('histList').innerHTML=h||'No History';}
-function adminLogin(){let p=prompt('Pass?'); if(p=='amman123')openPage('admin');}
-function renderAdmin(){let h='';wReq.reverse().forEach(x=>{h+=`<div style="background:#fff;padding:10px;margin:5px">${x.amt} -> ${x.upi}<br>${x.time}</div>`}); document.getElementById('adminData').innerHTML=h;}
-</script></body></html>
+const ADMIN_PASSWORD = "amman123"; // CHANGE THIS. For real security, use a backend.
+let coins = Number(localStorage.getItem("mbCoins") || 0);
+let history = JSON.parse(localStorage.getItem("mbHistory") || "[]");
+let withdrawEnabled = localStorage.getItem("mbWithdrawEnabled") === "true";
+let profile = JSON.parse(localStorage.getItem("mbProfile") || "{}");
+
+function save(){
+  localStorage.setItem("mbCoins", String(coins));
+  localStorage.setItem("mbHistory", JSON.stringify(history));
+  localStorage.setItem("mbWithdrawEnabled", String(withdrawEnabled));
+  localStorage.setItem("mbProfile", JSON.stringify(profile));
+  updateUI();
+}
+
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+
+function updateUI(){
+  document.getElementById("coins").textContent = coins;
+  document.getElementById("coinTop").textContent = coins;
+  document.getElementById("withdrawStatus").textContent = withdrawEnabled ? "ON" : "OFF";
+
+  document.getElementById("profileName").value = profile.name || "";
+  document.getElementById("profileEmail").value = profile.email || "";
+
+  const box = document.getElementById("withdrawBox");
+  if(!withdrawEnabled){
+    box.innerHTML = '<div class="notice">Withdrawal is currently OFF. The administrator will enable it only when sufficient funds and a verified payout process are available.</div>';
+  }else{
+    box.innerHTML = `
+      <p>Available: <b>${coins} MB Coins</b></p>
+      <p class="small">In this demo, a withdrawal request is recorded locally. Do not use this for real payments until a secure backend is connected.</p>
+      <input id="withdrawAmount" type="number" min="1" placeholder="Coins to withdraw">
+      <input id="withdrawUPI" placeholder="Your UPI ID">
+      <button class="primary" onclick="requestWithdraw()">Submit Withdrawal Request</button>
+      <p id="withdrawMsg" class="small"></p>`;
+  }
+
+  const list = document.getElementById("historyList");
+  if(history.length === 0){
+    list.innerHTML = '<p class="small">No reward activity yet.</p>';
+  }else{
+    list.innerHTML = history.slice().reverse().map(x =>
+      `<div class="history"><b>${esc(x.type)}</b> â€” ${esc(x.amount)} Coins<br><span class="small">${esc(x.date)}</span></div>`
+    ).join("");
+  }
+}
+
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  const el = document.getElementById(id);
+  if(el) el.classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function claimDaily(){
+  const today = new Date().toISOString().slice(0,10);
+  if(localStorage.getItem("mbDailyReward") === today){
+    document.getElementById("rewardMsg").textContent = "Today's reward has already been claimed.";
+    return;
+  }
+  coins += 10;
+  localStorage.setItem("mbDailyReward", today);
+  history.push({type:"Daily Reward",amount:10,date:new Date().toLocaleString()});
+  save();
+  document.getElementById("rewardMsg").textContent = "10 MB Coins added successfully.";
+}
+
+function requestWithdraw(){
+  const amount = Number(document.getElementById("withdrawAmount").value);
+  const upi = document.getElementById("withdrawUPI").value.trim();
+  const msg = document.getElementById("withdrawMsg");
+
+  if(!Number.isFinite(amount) || amount <= 0){
+    msg.textContent = "Enter a valid amount.";
+    return;
+  }
+  if(amount > coins){
+    msg.textContent = "Insufficient MB Coins.";
+    return;
+  }
+  if(!upi || !upi.includes("@")){
+    msg.textContent = "Enter a valid UPI ID.";
+    return;
+  }
+
+  coins -= amount;
+  history.push({type:"Withdrawal Request",amount:amount,date:new Date().toLocaleString()});
+  save();
+  msg.textContent = "Withdrawal request recorded. Manual verification is required.";
+}
+
+function saveProfile(){
+  profile.name = document.getElementById("profileName").value.trim();
+  profile.email = document.getElementById("profileEmail").value.trim();
+  save();
+  document.getElementById("profileMsg").textContent = "Profile saved on this device.";
+}
+
+function sendContact(){
+  const name = document.getElementById("contactName").value.trim();
+  const email = document.getElementById("contactEmail").value.trim();
+  const message = document.getElementById("contactMessage").value.trim();
+  const out = document.getElementById("contactMsg");
+
+  if(!name || !email || !message){
+    out.textContent = "Please fill all fields.";
+    return;
+  }
+  out.textContent = "Thank you. Your message is prepared, but this demo has no server-side contact system yet.";
+}
+
+function adminLogin(){
+  const pass = document.getElementById("adminPassword").value;
+  const panel = document.getElementById("adminPanel");
+
+  if(pass !== ADMIN_PASSWORD){
+    panel.innerHTML = '<p class="small">Incorrect password.</p>';
+    return;
+  }
+
+  panel.innerHTML = `
+    <hr>
+    <p><b>Withdrawal status:</b> ${withdrawEnabled ? "ON" : "OFF"}</p>
+    <button class="primary" onclick="toggleWithdraw()">${withdrawEnabled ? "Turn Withdrawal OFF" : "Turn Withdrawal ON"}</button>
+    <p class="small">Only enable withdrawals after you have enough real funds and a secure server-side payout/verification system.</p>`;
+}
+
+function toggleWithdraw(){
+  withdrawEnabled = !withdrawEnabled;
+  save();
+  adminLogin();
+}
+
+updateUI();
+</script>
+</body>
+</html>
